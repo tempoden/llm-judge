@@ -5,8 +5,10 @@ import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
 import com.openai.models.responses.ResponseCreateParams;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class OpenAIScorer implements Scorer {
 
@@ -17,8 +19,12 @@ public class OpenAIScorer implements Scorer {
     }
 
     @Override
-    public int scoreN(ScoringItem items, int times, ScoreCombiner combiner) {
-        return 0;
+    public int scoreN(ScoringItem item, int times, ScoreCombiner combiner) {
+        List<Integer> scores = IntStream.range(0, times)
+                .mapToObj(i -> this.requestScore(item))
+                .toList();
+
+        return combiner.apply(scores);
     }
 
     public int requestScore(ScoringItem item) {
@@ -61,7 +67,7 @@ public class OpenAIScorer implements Scorer {
         if (matcher.find()) {
             score = Integer.parseInt(matcher.group(1));
         } else {
-            throw new RuntimeException("No match found.");
+            throw new RuntimeException("No match found");
         }
 
         if (score < 0 || score > 10) {
