@@ -1,0 +1,45 @@
+{
+    "model_path": "smth",
+    "data": [
+        {
+            "input": "who is doing 2018 super bowl half time show",
+            "reference_output": "Justin Timberlake"
+        },
+        {
+            "input": "what are the two extracellular fluid compartments in the body",
+            "reference_output": "transcellular"
+        },
+        {
+            "input": "who did the whistling in the muppet movie",
+            "reference_output": "Andrew Bird"
+        },
+        {
+            "input": "industrial city in germany on the rhine herne canal",
+            "reference_output": "Henrichenburg"
+        },
+        {
+            "input": "when did sierra nevada brewery open in asheville",
+            "reference_output": "early 2014"
+        },
+        {
+            "input": "when was the young and the restless first aired",
+            "reference_output": "March 26, 1973"
+        },
+        {
+            "input": "german word for pleasure from someone else's pain",
+            "reference_output": "Schadenfreude"
+        },
+        {
+            "input": "who has the talismans in sailor moon s",
+            "reference_output": "Haruka and Michiru"
+        },
+        {
+            "input": "the oligodynamic effect is a phenomenon that describes",
+            "reference_output": "a biocidal effect of metals"
+        },
+        {
+            "input": "who sang it must have been love but its over now",
+            "reference_output": "Roxette"
+        }
+    ]
+}
