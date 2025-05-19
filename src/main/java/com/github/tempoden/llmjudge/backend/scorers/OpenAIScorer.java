@@ -5,8 +5,6 @@ import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
 import com.openai.models.responses.ResponseCreateParams;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,12 +17,7 @@ public class OpenAIScorer implements Scorer {
     }
 
     @Override
-    public int score(ScoringItem item) {
-        return 0;
-    }
-
-    @Override
-    public int scoreN(List<ScoringItem> items, ScoresCombiner combiner) {
+    public int scoreN(ScoringItem items, int times, ScoreCombiner combiner) {
         return 0;
     }
 
