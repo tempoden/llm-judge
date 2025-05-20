@@ -1,8 +1,8 @@
 package com.github.tempoden.llmjudge;
 
-import com.github.tempoden.llmjudge.backend.scorers.OpenAIScorer;
-import com.github.tempoden.llmjudge.backend.scorers.ScoreCombiners;
-import com.github.tempoden.llmjudge.backend.scorers.ScoringItem;
+import com.github.tempoden.llmjudge.backend.scoring.OpenAIScorer;
+import com.github.tempoden.llmjudge.backend.scoring.ScoreCombiners;
+import com.github.tempoden.llmjudge.backend.scoring.ScoringItem;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 
