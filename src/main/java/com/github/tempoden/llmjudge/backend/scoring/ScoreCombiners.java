@@ -1,4 +1,4 @@
-package com.github.tempoden.llmjudge.backend.scorers;
+package com.github.tempoden.llmjudge.backend.scoring;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.github.tempoden.llmjudge.backend.scorers;
+package com.github.tempoden.llmjudge.backend.scoring;
 
 import com.openai.client.OpenAIClient;
 import com.openai.models.ChatModel;
