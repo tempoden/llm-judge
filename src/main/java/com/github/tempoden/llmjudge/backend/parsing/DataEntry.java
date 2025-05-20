@@ -6,9 +6,9 @@ import java.util.Objects;
 
 public class DataEntry {
     @JsonProperty("input")
-    String input;
+    public String input;
     @JsonProperty("reference_output")
-    String referenceOutput;
+    public String referenceOutput;
 
     // implicitly used by parser
     DataEntry() {}
