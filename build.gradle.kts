@@ -32,6 +32,7 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     implementation("com.openai:openai-java:1.6.1")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3")
 
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
