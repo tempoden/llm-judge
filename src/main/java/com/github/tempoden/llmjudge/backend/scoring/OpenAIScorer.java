@@ -1,33 +1,93 @@
 package com.github.tempoden.llmjudge.backend.scoring;
 
-import com.openai.client.OpenAIClient;
+import com.openai.client.OpenAIClientAsync;
 import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
 import com.openai.models.responses.ResponseCreateParams;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 public class OpenAIScorer implements Scorer {
+    private static final long CANCEL_CHECK_TIMEOUT = 2;
 
-    private final OpenAIClient client;
+    private final OpenAIClientAsync client;
+    private final Supplier<Boolean> cancel;
 
-    public OpenAIScorer(OpenAIClient client) {
+    public OpenAIScorer(@NotNull OpenAIClientAsync client) {
         this.client = client;
+        this.cancel = null;
+    }
+
+    public OpenAIScorer(@NotNull OpenAIClientAsync client, @NotNull Supplier<Boolean> cancel) {
+        this.client = client;
+        this.cancel = cancel;
     }
 
     @Override
-    public int scoreN(ScoringItem item, int times, ScoreCombiner combiner) {
-        List<Integer> scores = IntStream.range(0, times)
-                .mapToObj(i -> this.requestScore(item))
+    public int scoreN(@NotNull ScoringItem item, int times, @NotNull ScoreCombiner combiner) {
+        if (cancel != null && cancel.get()) {
+            throw new ScoringCancelledException();
+        }
+
+        List<CompletableFuture<Response>> responseHandles = new ArrayList<>(times);
+        for (int i = 0; i < times; i++) {
+            responseHandles.add(sendRequest(item));
+        }
+
+        CompletableFuture<Void> waitAll = CompletableFuture.allOf(responseHandles.toArray(new CompletableFuture[]{}));
+
+        if (cancel == null) {
+            waitAll.join();
+        } else {
+            boolean isCancelled = waitWithCancel(waitAll, cancel);
+
+            if (isCancelled) {
+                waitAll.cancel(true);
+                responseHandles.forEach(rh -> rh.cancel(true));
+                throw new ScoringCancelledException();
+            }
+        }
+
+        // I would rather not deal with CompletableFuture chains cancellation
+        // and perform parsing synchronously
+        List<Integer> scores = responseHandles.stream()
+                .map(CompletableFuture::join)
+                .map(this::parseScore)
                 .toList();
 
         return combiner.apply(scores);
     }
 
-    public int requestScore(ScoringItem item) {
+    private boolean waitWithCancel(@NotNull CompletableFuture<Void> handle, @NotNull Supplier<Boolean> cancel) {
+        boolean isCancelled = cancel.get();
+
+        while (!handle.isDone() && !isCancelled) {
+            try {
+                handle.get(CANCEL_CHECK_TIMEOUT, TimeUnit.SECONDS);
+                isCancelled = cancel.get();
+            } catch (InterruptedException e) {
+                // continue waiting on interrupt and pass an interruption flag
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                throw new ScoringException("exception during wait", e);
+            } catch (TimeoutException ignored) {
+                // it is expected
+            }
+        }
+
+        return isCancelled || handle.isCancelled();
+    }
+
+    private CompletableFuture<Response> sendRequest(ScoringItem item) {
         ResponseCreateParams params = ResponseCreateParams.builder()
                 .instructions(JUDGE_PROMPT)
                 .input("""
@@ -38,9 +98,11 @@ public class OpenAIScorer implements Scorer {
                 .model(ChatModel.GPT_4_1)
                 .build();
 
-        Response response = client.responses().create(params);
+        return client.responses().create(params);
+    }
 
-        if (response.output().size() != 1) {
+    private int parseScore(Response response) {
+       if (response.output().size() != 1) {
             throw new RuntimeException("Unexpected response size");
         }
 
