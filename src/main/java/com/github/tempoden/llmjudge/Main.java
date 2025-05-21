@@ -25,11 +25,11 @@ public class Main {
         DataParser parser = new JSONParser();
         try {
             Content content = parser.parse(new FileReader(new File("C:\\SHAD\\JB\\llm-judge\\misc\\dataset\\demo-10.json")));
-            var result = content.data.stream()
+            var result = content.data().stream()
                     .map(entry -> new ScoringItem(
-                            entry.input,
-                            entry.referenceOutput,
-                            runner.queryModel(entry.referenceOutput)
+                            entry.input(),
+                            entry.referenceOutput(),
+                            runner.queryModel(entry.referenceOutput())
                     )).map(Main::queryChatGPT)
                     .toList();
             System.out.println(result);

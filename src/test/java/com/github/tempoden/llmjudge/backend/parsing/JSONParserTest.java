@@ -58,7 +58,7 @@ public class JSONParserTest {
         StringReader sr = new StringReader("{}");
 
         DataParser parser = new JSONParser();
-        Content expected = new Content();
+        Content expected = new Content(null, null);
 
         assertEquals(expected, parser.parse(sr));
     }
