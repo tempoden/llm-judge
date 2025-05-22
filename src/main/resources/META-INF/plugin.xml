@@ -10,6 +10,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.tempoden.llmjudge.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.tempoden.llmjudge.startup.MyProjectActivity" />
+        <!--postStartupActivity implementation="com.github.tempoden.llmjudge.startup.MyProjectActivity" /-->
     </extensions>
 </idea-plugin>
