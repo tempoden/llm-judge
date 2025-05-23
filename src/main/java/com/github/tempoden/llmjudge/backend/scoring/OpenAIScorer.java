@@ -1,5 +1,7 @@
 package com.github.tempoden.llmjudge.backend.scoring;
 
+import com.github.tempoden.llmjudge.backend.concurrency.WaitUtil;
+
 import com.openai.client.OpenAIClientAsync;
 import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
@@ -9,32 +11,26 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OpenAIScorer implements Scorer {
-    private static final long CANCEL_CHECK_TIMEOUT = 2;
-
     private final OpenAIClientAsync client;
-    private final Supplier<Boolean> cancel;
+    private final CompletableFuture<Void> cancel;
 
     public OpenAIScorer(@NotNull OpenAIClientAsync client) {
         this.client = client;
         this.cancel = null;
     }
 
-    public OpenAIScorer(@NotNull OpenAIClientAsync client, @NotNull Supplier<Boolean> cancel) {
+    public OpenAIScorer(@NotNull OpenAIClientAsync client, @NotNull CompletableFuture<Void> cancel) {
         this.client = client;
         this.cancel = cancel;
     }
 
     @Override
     public int scoreN(@NotNull ScoringItem item, int times, @NotNull ScoreCombiner combiner) {
-        if (cancel != null && cancel.get()) {
+        if (cancel != null && cancel.isDone()) {
             throw new ScoringCancelledException();
         }
 
@@ -48,9 +44,9 @@ public class OpenAIScorer implements Scorer {
         if (cancel == null) {
             waitAll.join();
         } else {
-            boolean isCancelled = waitWithCancel(waitAll, cancel);
+            boolean isDone = WaitUtil.waitWithCancel(waitAll, cancel);
 
-            if (isCancelled) {
+            if (!isDone) {
                 waitAll.cancel(true);
                 responseHandles.forEach(rh -> rh.cancel(true));
                 throw new ScoringCancelledException();
@@ -65,26 +61,6 @@ public class OpenAIScorer implements Scorer {
                 .toList();
 
         return combiner.apply(scores);
-    }
-
-    private boolean waitWithCancel(@NotNull CompletableFuture<Void> handle, @NotNull Supplier<Boolean> cancel) {
-        boolean isCancelled = cancel.get();
-
-        while (!handle.isDone() && !isCancelled) {
-            try {
-                handle.get(CANCEL_CHECK_TIMEOUT, TimeUnit.SECONDS);
-                isCancelled = cancel.get();
-            } catch (InterruptedException e) {
-                // continue waiting on interrupt and pass an interruption flag
-                Thread.currentThread().interrupt();
-            } catch (ExecutionException e) {
-                throw new ScoringException("exception during wait", e);
-            } catch (TimeoutException ignored) {
-                // it is expected
-            }
-        }
-
-        return isCancelled || handle.isCancelled();
     }
 
     private CompletableFuture<Response> sendRequest(ScoringItem item) {

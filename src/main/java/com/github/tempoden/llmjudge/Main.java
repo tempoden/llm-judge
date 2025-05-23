@@ -1,19 +1,15 @@
 package com.github.tempoden.llmjudge;
 
-import com.github.tempoden.llmjudge.backend.parsing.Content;
-import com.github.tempoden.llmjudge.backend.parsing.DataParser;
-import com.github.tempoden.llmjudge.backend.parsing.JSONParser;
-import com.github.tempoden.llmjudge.backend.runner.ModelRunner;
-import com.github.tempoden.llmjudge.backend.runner.PythonRunner;
-import com.github.tempoden.llmjudge.backend.scoring.OpenAIScorer;
-import com.github.tempoden.llmjudge.backend.scoring.ScoreCombiners;
-import com.github.tempoden.llmjudge.backend.scoring.ScoringItem;
+import com.github.tempoden.llmjudge.backend.parsing.*;
+import com.github.tempoden.llmjudge.backend.runner.*;
+import com.github.tempoden.llmjudge.backend.scoring.*;
+
 import com.openai.client.OpenAIClientAsync;
 import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.CompletableFuture;
 
 public class Main {
     public static void main(String[] args) {
@@ -43,16 +39,18 @@ public class Main {
     }
 
     public static int queryChatGPT(ScoringItem item, OpenAIClientAsync client) {
-        OpenAIScorer openAI = new OpenAIScorer(client, () -> ThreadLocalRandom.current().nextBoolean());
+        CompletableFuture<Void> cancel = new CompletableFuture<>();
+        OpenAIScorer openAI = new OpenAIScorer(client, cancel);
 
         try {
-            int score = openAI.scoreN((item), 10, ScoreCombiners::votingCombine);
-            Thread.sleep(500);
+            int score = openAI.scoreN((item), 2, ScoreCombiners::votingCombine);
             System.out.println("Score: " + score);
             return score;
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        cancel.complete(null);
         return 0;
     }
 }
