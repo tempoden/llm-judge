@@ -1,5 +1,6 @@
 package com.github.tempoden.llmjudge.backend.scoring;
 
+import com.github.tempoden.llmjudge.backend.concurrency.CancellationToken;
 import com.github.tempoden.llmjudge.backend.concurrency.WaitUtil;
 
 import com.openai.client.OpenAIClientAsync;
@@ -16,21 +17,21 @@ import java.util.regex.Pattern;
 
 public class OpenAIScorer implements Scorer {
     private final OpenAIClientAsync client;
-    private final CompletableFuture<Void> cancel;
+    private final CancellationToken cancel;
 
     public OpenAIScorer(@NotNull OpenAIClientAsync client) {
         this.client = client;
         this.cancel = null;
     }
 
-    public OpenAIScorer(@NotNull OpenAIClientAsync client, @NotNull CompletableFuture<Void> cancel) {
+    public OpenAIScorer(@NotNull OpenAIClientAsync client, @NotNull CancellationToken cancel) {
         this.client = client;
         this.cancel = cancel;
     }
 
     @Override
     public int scoreN(@NotNull ScoringItem item, int times, @NotNull ScoreCombiner combiner) {
-        if (cancel != null && cancel.isDone()) {
+        if (cancel != null && cancel.isCancelled()) {
             throw new ScoringCancelledException();
         }
 

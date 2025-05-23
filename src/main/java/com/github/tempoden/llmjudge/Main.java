@@ -1,5 +1,6 @@
 package com.github.tempoden.llmjudge;
 
+import com.github.tempoden.llmjudge.backend.concurrency.CancellationToken;
 import com.github.tempoden.llmjudge.backend.parsing.*;
 import com.github.tempoden.llmjudge.backend.runner.*;
 import com.github.tempoden.llmjudge.backend.scoring.*;
@@ -9,7 +10,6 @@ import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.concurrent.CompletableFuture;
 
 public class Main {
     public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class Main {
     }
 
     public static int queryChatGPT(ScoringItem item, OpenAIClientAsync client) {
-        CompletableFuture<Void> cancel = new CompletableFuture<>();
+        CancellationToken cancel = new CancellationToken();
         OpenAIScorer openAI = new OpenAIScorer(client, cancel);
 
         try {
@@ -50,7 +50,7 @@ public class Main {
             System.out.println(e);
         }
 
-        cancel.complete(null);
+        cancel.cancel();
         return 0;
     }
 }

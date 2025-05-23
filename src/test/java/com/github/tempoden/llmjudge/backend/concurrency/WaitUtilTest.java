@@ -11,7 +11,7 @@ public class WaitUtilTest {
     @Test(timeout = 1000)
     public void testWorkloadCompletesBeforeCancel() {
         CompletableFuture<String> workload = new CompletableFuture<>();
-        CompletableFuture<Void> cancel = new CompletableFuture<>();
+        CancellationToken cancel = new CancellationToken();
 
         try (ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor()){
 
@@ -20,7 +20,7 @@ public class WaitUtilTest {
             boolean result = WaitUtil.waitWithCancel(workload, cancel);
 
             assertTrue("Should return true when workload completes first", result);
-            assertFalse("Cancel future should not be done", cancel.isDone());
+            assertFalse("Cancel future should not be done", cancel.isCancelled());
             assertTrue("Workload should be completed", workload.isDone());
         }
     }
@@ -28,16 +28,16 @@ public class WaitUtilTest {
     @Test(timeout = 1000)
     public void testCancelCompletesBeforeWorkload() {
         CompletableFuture<String> workload = new CompletableFuture<>();
-        CompletableFuture<Void> cancel = new CompletableFuture<>();
+        CancellationToken cancel = new CancellationToken();
 
         try (ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor()) {
 
-            executor.schedule(() -> cancel.complete(null), 100, TimeUnit.MILLISECONDS);
+            executor.schedule(cancel::cancel, 100, TimeUnit.MILLISECONDS);
 
             boolean result = WaitUtil.waitWithCancel(workload, cancel);
 
             assertFalse("Should return false when cancel completes first", result);
-            assertTrue("Cancel future should be completed", cancel.isDone());
+            assertTrue("Cancel future should be completed", cancel.isCancelled());
             assertTrue("Workload should be cancelled", workload.isCancelled());
         }
     }

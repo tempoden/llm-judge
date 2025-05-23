@@ -16,12 +16,12 @@ public class WaitUtil {
 
     // returns true if task was completed successfully
     //         false if it was canceled
-    public static <T> boolean waitWithCancel(CompletableFuture<T> workload, CompletableFuture<Void> cancel) {
-        CompletableFuture<?> any = CompletableFuture.anyOf(workload, cancel);
+    public static <T> boolean waitWithCancel(CompletableFuture<T> workload, CancellationToken cancel) {
+        CompletableFuture<?> any = CompletableFuture.anyOf(workload, cancel.impl);
 
         any.join();
 
-        if (cancel.isDone()) {
+        if (cancel.impl.isDone()) {
             workload.cancel(true);
             return false;
         }
