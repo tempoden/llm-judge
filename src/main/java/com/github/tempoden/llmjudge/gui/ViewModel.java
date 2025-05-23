@@ -1,12 +1,13 @@
 package com.github.tempoden.llmjudge.gui;
 
 import com.github.tempoden.llmjudge.backend.Model;
+import com.intellij.openapi.application.ApplicationManager;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 
 public class ViewModel {
-
-    private final Model model;
 
     private JButton pythonPathButton;
     private JLabel pythonPathLabel;
@@ -18,40 +19,32 @@ public class ViewModel {
 
     private JButton controlButton;
 
-    private JScrollPane scrollPane;
     private JTable table;
 
-    public ViewModel(Model model) {
-        this.model = model;
-        model.register(this);
-    }
-
-    public void registerPythonPathButton(JButton pythonPathButton) {
+    public ViewModel(@NotNull JButton pythonPathButton,
+                     @NotNull JLabel pythonPathLabel,
+                     @NotNull JButton jsonButton,
+                     @NotNull JLabel jsonLabel,
+                     @NotNull JLabel modelPathLabel,
+                     @NotNull JButton controlButton,
+                     @NotNull JTable table)  {
         this.pythonPathButton = pythonPathButton;
-    }
-
-    public void registerPythonPathLabel(JLabel pythonPathLabel) {
         this.pythonPathLabel = pythonPathLabel;
-    }
 
-    public void registerJsonButton(JButton jsonButton) {
         this.jsonButton = jsonButton;
-    }
-
-    public void registerJsonLabel(JLabel jsonLabel) {
         this.jsonLabel = jsonLabel;
-    }
 
-    public void registerModelPathLabel(JLabel modelPathLabel) {
         this.modelPathLabel = modelPathLabel;
-    }
 
-    public void registerControlButton(JButton controlButton) {
         this.controlButton = controlButton;
+
+        this.table = table;
     }
 
-    public void registerScrollPane(JScrollPane scrollPane) {
-        this.scrollPane = scrollPane;
+    public void resetTable(@NotNull TableModel tableModel) {
+        ApplicationManager.getApplication().invokeLater(
+                () -> table.setModel(tableModel)
+        );
     }
 
 }

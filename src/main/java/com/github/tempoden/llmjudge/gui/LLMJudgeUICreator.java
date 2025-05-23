@@ -1,11 +1,17 @@
 package com.github.tempoden.llmjudge.gui;
 
+import com.github.tempoden.llmjudge.backend.parsing.Content;
+import com.github.tempoden.llmjudge.backend.parsing.DataParser;
+import com.github.tempoden.llmjudge.backend.parsing.JSONParser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBLabel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LLMJudgeUICreator {
@@ -87,51 +93,30 @@ public class LLMJudgeUICreator {
         // Add the button to the top of the pluginPanel
         pluginPanel.add(withButtons, BorderLayout.NORTH);
 
-        // Define the table column names
-        String[] columnNames = {"Column 1", "Column 2", "Column 3", "Column 4"};
-
-        // Create a 10x4 table model with some dummy values
-        Object[][] data = new Object[10][4];
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 4; col++) {
-                data[row][col] = "Cell " + (row + 1) + "," + (col + 1);
-            }
-        }
-
-        JScrollPane scrollPane = initJScrollPane(data, columnNames);
+        JScrollPane scrollPane = initJScrollPane();
         // Add the scroll pane (with the table) to the center of the pluginPanel
         pluginPanel.add(scrollPane, BorderLayout.CENTER);
     }
 
-    private static JScrollPane initJScrollPane(Object[][] data, String[] columnNames) {
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // All cells non-editable
-            }
-        };
+    private static JScrollPane initJScrollPane() {
+        DataParser parser = new JSONParser();
+        Content content;
+        try {
+            content = parser.parse(new FileReader("C:\\SHAD\\JB\\llm-judge\\misc\\dataset\\demo-10.json"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        TableModel model = Util.buildTableModel(content.data());
 
         // Create the table using the data and column names
         JTable table = new JTable(model);
         // Make separate cells selectable
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
+        // Forbid columns reordering
+        table.getTableHeader().setReorderingAllowed(false);
 
-        // Put the table inside a scroll pane
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        for (int i = 0; i < 10; ++i) {
-            ApplicationManager.getApplication().executeOnPooledThread(() -> {
-                var rand = ThreadLocalRandom.current().nextInt(-1000, 1000);
-                var row = ThreadLocalRandom.current().nextInt(0, 10);
-                var col = ThreadLocalRandom.current().nextInt(0, 4);
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    System.out.println("Attempting to update " + model);
-                    model.setValueAt("Random " + rand, row, col);
-                    //throw new RuntimeException("poluchay");
-                });
-            });
-        }
-        return scrollPane;
+        return new JScrollPane(table);
     }
 }

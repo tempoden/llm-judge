@@ -2,7 +2,7 @@ package com.github.tempoden.llmjudge.backend.concurrency;
 
 import java.util.concurrent.CompletableFuture;
 
-public class WaitUtil {
+public final class WaitUtil {
 
     // I haven't found anything suitable for polling, but recently I have implemented an async future/promise
     // library for C++. Also, I have remembered about Go `select` syntax used for cancellation:

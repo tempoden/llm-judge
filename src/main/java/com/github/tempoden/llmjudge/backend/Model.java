@@ -6,7 +6,7 @@ public class Model {
 
     private ViewModel vm;
 
-    public void register(ViewModel vm) {
+    public Model (ViewModel vm) {
         this.vm = vm;
     }
 
