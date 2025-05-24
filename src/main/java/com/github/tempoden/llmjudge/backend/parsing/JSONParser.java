@@ -3,13 +3,14 @@ package com.github.tempoden.llmjudge.backend.parsing;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
 
 public class JSONParser implements DataParser{
     @Override
-    public Content parse(Reader src) {
+    public Content parse(@NotNull Reader src) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(src, Content.class);

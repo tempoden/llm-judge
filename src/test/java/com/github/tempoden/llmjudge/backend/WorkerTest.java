@@ -40,10 +40,10 @@ public class WorkerTest {
     @Test
     public void testNormalExecution() {
         when(modelRunner.queryModel("input")).thenReturn("response");
-        when(scorer.score(any())).thenReturn(42);
+        when(scorer.scoreN(any(), eq(4), any())).thenReturn(42);
         when(token.isCancelled()).thenReturn(false);
 
-        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, token);
+        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 4, token);
         worker.run();
 
         verify(runnerStatus).accept("Evaluating...");
@@ -56,7 +56,7 @@ public class WorkerTest {
     public void testCancelledBeforeStart() {
         when(token.isCancelled()).thenReturn(true);
 
-        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, token);
+        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token);
         worker.run();
 
         verifyNoInteractions(runnerStatus, scorerStatus, modelRunner, scorer);
@@ -67,14 +67,14 @@ public class WorkerTest {
         when(token.isCancelled()).thenReturn(false).thenReturn(true); // first false, then true
         when(modelRunner.queryModel("input")).thenReturn("response");
 
-        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, token);
+        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token);
         worker.run();
 
         verify(runnerStatus).accept("Evaluating...");
         verify(runnerStatus).accept("response");
 
         verify(scorerStatus, never()).accept("Evaluating...");
-        verify(scorer, never()).score(any());
+        verify(scorer, never()).scoreN(any(), anyInt(), any());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class WorkerTest {
 
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
 
-            Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, token);
+            Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token);
             Future<?> future = executor.submit(worker);
 
             // Wait until modelRunner.queryModel has been entered
@@ -107,7 +107,7 @@ public class WorkerTest {
             verify(runnerStatus).accept("delayed response");
 
             verify(scorerStatus, never()).accept("Evaluating...");
-            verify(scorer, never()).score(any());
+            verify(scorer, never()).scoreN(any(), anyInt(), any());
 
             executor.shutdown();
         }

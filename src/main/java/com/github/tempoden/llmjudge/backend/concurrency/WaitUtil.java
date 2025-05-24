@@ -1,5 +1,7 @@
 package com.github.tempoden.llmjudge.backend.concurrency;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.CompletableFuture;
 
 public final class WaitUtil {
@@ -16,7 +18,10 @@ public final class WaitUtil {
 
     // returns true if task was completed successfully
     //         false if it was canceled
-    public static <T> boolean waitWithCancel(CompletableFuture<T> workload, CancellationToken cancel) {
+    public static <T> boolean waitWithCancel(
+            @NotNull CompletableFuture<T> workload,
+            @NotNull CancellationToken cancel
+    ) {
         CompletableFuture<?> any = CompletableFuture.anyOf(workload, cancel.impl);
 
         any.join();

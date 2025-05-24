@@ -1,5 +1,7 @@
 package com.github.tempoden.llmjudge.backend.runner;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +23,7 @@ public class PythonRunner implements ModelRunner {
     }
 
     @Override
-    public String queryModel(String prompt) {
+    public String queryModel(@NotNull String prompt) {
         ProcessBuilder builder = new ProcessBuilder(List.of(
                 interpreterPath,
                 modelPath,
