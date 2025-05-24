@@ -1,18 +1,11 @@
 package com.github.tempoden.llmjudge.gui;
 
-import com.github.tempoden.llmjudge.backend.parsing.Content;
-import com.github.tempoden.llmjudge.backend.parsing.DataParser;
-import com.github.tempoden.llmjudge.backend.parsing.JSONParser;
-import com.intellij.openapi.application.ApplicationManager;
+import com.github.tempoden.llmjudge.backend.Model;
 import com.intellij.ui.components.JBLabel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class LLMJudgeUICreator {
     public static void createContent(JPanel pluginPanel) {
@@ -25,17 +18,17 @@ public class LLMJudgeUICreator {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JButton button1 = new JButton("Button 1");
-        JLabel label1 = new JBLabel("Label 1");
-        JButton button2 = new JButton("Button 2");
-        JLabel label2 = new JBLabel("Label 2");
-        JLabel bottomLabel = new JBLabel("Bottom label under right buttons");
-        bottomLabel.setHorizontalAlignment(SwingConstants.HORIZONTAL);
+        JButton pythonButton = new JButton("Set python");
+        JLabel pythonLabel = new JBLabel("Label 1");
+        JButton jsonButton = new JButton("Set JSON");
+        JLabel jsonLabel = new JBLabel("Label 2");
+        JLabel modelLabel = new JBLabel("Bottom label under right buttons");
+        modelLabel.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
         // Fix button sizes
         Dimension fixedButtonSize = new Dimension(100, 30);
-        button1.setPreferredSize(fixedButtonSize);
-        button2.setPreferredSize(fixedButtonSize);
+        pythonButton.setPreferredSize(fixedButtonSize);
+        jsonButton.setPreferredSize(fixedButtonSize);
 
         // --- Row 1: Button1 + Label1 ---
         gbc.gridx = 0;
@@ -43,23 +36,23 @@ public class LLMJudgeUICreator {
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
         gbc.weightx = 0;
-        rightPanel.add(button1, gbc);
+        rightPanel.add(pythonButton, gbc);
 
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         //gbc.anchor = GridBagConstraints.LINE_START;
-        rightPanel.add(label1, gbc);
+        rightPanel.add(pythonLabel, gbc);
 
         // --- Row 2: Button2 + Label2 ---
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.NONE;
-        rightPanel.add(button2, gbc);
+        rightPanel.add(jsonButton, gbc);
 
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         //gbc.anchor = GridBagConstraints.LINE_START;
-        rightPanel.add(label2, gbc);
+        rightPanel.add(jsonLabel, gbc);
 
         // --- Row 3: Bottom Label (spanning both columns) ---
         gbc.gridx = 0;
@@ -68,17 +61,17 @@ public class LLMJudgeUICreator {
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.weightx = 1;
-        rightPanel.add(bottomLabel, gbc);
+        rightPanel.add(modelLabel, gbc);
 
         withButtons.add(rightPanel, BorderLayout.CENTER);
 
         // ===== Left Panel with square button =====
         JPanel leftPanel = new JPanel(new GridBagLayout());
-        JButton leftButton = new JButton("Left");
+        JButton controlButton = new JButton("Start");
 
         // Set a temporary square size (will resize after layout)
         Dimension defaultSize = new Dimension(rightPanel.getPreferredSize().width, rightPanel.getPreferredSize().height);
-        leftButton.setPreferredSize(defaultSize);
+        controlButton.setPreferredSize(defaultSize);
 
         GridBagConstraints leftConstraints = new GridBagConstraints();
         leftConstraints.gridx = 0;
@@ -87,36 +80,34 @@ public class LLMJudgeUICreator {
         leftConstraints.fill = GridBagConstraints.NONE;
         leftConstraints.weighty = 1;
 
-        leftPanel.add(leftButton, leftConstraints);
+        leftPanel.add(controlButton, leftConstraints);
         withButtons.add(leftPanel, BorderLayout.WEST);
 
         // Add the button to the top of the pluginPanel
         pluginPanel.add(withButtons, BorderLayout.NORTH);
 
-        JScrollPane scrollPane = initJScrollPane();
-        // Add the scroll pane (with the table) to the center of the pluginPanel
-        pluginPanel.add(scrollPane, BorderLayout.CENTER);
-    }
-
-    private static JScrollPane initJScrollPane() {
-        DataParser parser = new JSONParser();
-        Content content;
-        try {
-            content = parser.parse(new FileReader("C:\\SHAD\\JB\\llm-judge\\misc\\dataset\\demo-10.json"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        TableModel model = Util.buildTableModel(content.data());
-
         // Create the table using the data and column names
-        JTable table = new JTable(model);
+        JTable table = new JTable(new DefaultTableModel(null, Util.columnNames));
         // Make separate cells selectable
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
         // Forbid columns reordering
         table.getTableHeader().setReorderingAllowed(false);
 
-        return new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(table);
+        // Add the scroll pane (with the table) to the center of the pluginPanel
+        pluginPanel.add(scrollPane, BorderLayout.CENTER);
+
+        ViewModel vm = new ViewModel(
+                pythonButton,
+                pythonLabel,
+                jsonButton,
+                jsonLabel,
+                modelLabel,
+                controlButton,
+                table
+        );
+
+        Model model = new Model(vm);
     }
 }

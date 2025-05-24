@@ -88,7 +88,7 @@ public class JSONParserTest {
                             "input": "industrial city in germany on the rhine herne canal",
                             "reference_output": "Henrichenburg",
                             "answer": "HEYY"
-                        },
+                        }
                     ]
                 }
                 """);
