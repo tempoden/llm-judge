@@ -17,11 +17,28 @@
 - [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+This plugin allows you to run evaluation of your models with a LLM-judge right from your IDE!
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+To use it, you should provide a data file with the following JSON format:
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
+```json
+{
+  "model_path": "path/to/model.py",
+  "data": [
+    {
+      "input": "german word for pleasure from someone else's pain",
+      "reference_output": "Schadenfreude"
+    },
+    {
+      "input": "who sang it must have been love but its over now",
+      "reference_output": "Roxette"
+    }
+  ]
+}
+```
+
+The `model.py` will be run using the chosen Python interpreter (by default, it will be the `python` executable from your `$PATH` environmental variable).
+
 <!-- Plugin description end -->
 
 ## Installation

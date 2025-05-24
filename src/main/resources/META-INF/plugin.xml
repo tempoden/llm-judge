@@ -6,10 +6,7 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.tempoden.llmjudge.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <!--postStartupActivity implementation="com.github.tempoden.llmjudge.startup.MyProjectActivity" /-->
+        <toolWindow factoryClass="com.github.tempoden.llmjudge.toolWindow.MyToolWindowFactory" id="LLM-Judge"/>
     </extensions>
 </idea-plugin>
