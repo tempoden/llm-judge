@@ -2,8 +2,12 @@ import openai
 import os
 import sys
 
+# enable utf-8, so we don't get wierd
+# crashes from French symbols
+sys.stdout.reconfigure(encoding='utf-8')
+
 # Set your OpenAI API key here or use environment variable
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))  # Replace if needed
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY", "set your key"))  # Replace if needed
 
 def ask_chatgpt(prompt: str, model: str = "gpt-4") -> str:
     chat_completion = client.chat.completions.create(
