@@ -3,6 +3,8 @@ package com.github.tempoden.llmjudge.backend.scoring;
 import com.github.tempoden.llmjudge.backend.concurrency.CancellationToken;
 import com.github.tempoden.llmjudge.backend.concurrency.WaitUtil;
 
+import com.github.tempoden.llmjudge.backend.runner.PythonJBRunner;
+import com.intellij.openapi.diagnostic.Logger;
 import com.openai.client.OpenAIClientAsync;
 import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
@@ -12,19 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class OpenAIScorer implements Scorer {
     public static final ChatModel defaultModel = ChatModel.GPT_4_1;
 
+    private static final Logger LOG = Logger.getInstance(OpenAIScorer.class);
+
     private final OpenAIClientAsync client;
     private final CancellationToken cancel;
-
-    public OpenAIScorer(@NotNull OpenAIClientAsync client) {
-        this.client = client;
-        this.cancel = null;
-    }
 
     public OpenAIScorer(@NotNull OpenAIClientAsync client, @NotNull CancellationToken cancel) {
         this.client = client;
@@ -33,7 +30,7 @@ public class OpenAIScorer implements Scorer {
 
     @Override
     public int scoreN(@NotNull ScoringItem item, int times, @NotNull ScoreCombiner combiner) {
-        if (cancel != null && cancel.isCancelled()) {
+        if (cancel.isCancelled()) {
             throw new ScoringCancelledException();
         }
 
@@ -44,16 +41,12 @@ public class OpenAIScorer implements Scorer {
 
         CompletableFuture<Void> waitAll = CompletableFuture.allOf(responseHandles.toArray(new CompletableFuture[]{}));
 
-        if (cancel == null) {
-            waitAll.join();
-        } else {
-            boolean isDone = WaitUtil.waitWithCancel(waitAll, cancel);
+        boolean isDone = WaitUtil.waitWithCancel(waitAll, cancel);
 
-            if (!isDone) {
-                waitAll.cancel(true);
-                responseHandles.forEach(rh -> rh.cancel(true));
-                throw new ScoringCancelledException();
-            }
+        if (!isDone) {
+            waitAll.cancel(true);
+            responseHandles.forEach(rh -> rh.cancel(true));
+            throw new ScoringCancelledException();
         }
 
         // I would rather not deal with CompletableFuture chains cancellation
@@ -81,25 +74,25 @@ public class OpenAIScorer implements Scorer {
     }
 
     private int parseScore(Response response) {
-       if (response.output().size() != 1) {
-            throw new RuntimeException("Unexpected response size");
+        if (response.output().size() != 1) {
+            throw new ScoringException("Unexpected response size");
         }
 
         var output = response.output().getFirst();
         if (!output.isMessage()) {
-            throw new RuntimeException("Unexpected response type");
+            throw new ScoringException("Unexpected response type");
         }
 
         if (output.asMessage().content().size() != 1) {
-            throw new RuntimeException("Unexpected message content size");
+            throw new ScoringException("Unexpected message content size");
         }
 
         var content = output.asMessage().content().getFirst();
         if (!content.isOutputText()) {
-            throw new RuntimeException("Invalid output text");
+            throw new ScoringException("Invalid content type");
         }
 
-        System.out.println(content.asOutputText());
+        LOG.debug("ChatGPT-based Judge output: " + content.asOutputText());
 
        return ScorerUtil.parseScore(content.asOutputText().text());
     }

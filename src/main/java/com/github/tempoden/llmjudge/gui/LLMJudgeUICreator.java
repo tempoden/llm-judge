@@ -1,14 +1,15 @@
 package com.github.tempoden.llmjudge.gui;
 
-import com.github.tempoden.llmjudge.backend.Model;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class LLMJudgeUICreator {
-    public static void createContent(JPanel pluginPanel) {
+    public static ViewModel createContent(JPanel pluginPanel) {
         pluginPanel.setLayout(new BorderLayout());
 
         JPanel withButtons = new JPanel();
@@ -67,27 +68,65 @@ public class LLMJudgeUICreator {
 
         // ===== Left Panel with square button =====
         JPanel leftPanel = new JPanel(new GridBagLayout());
-        JButton controlButton = new JButton("Start");
-
-        // Set a temporary square size (will resize after layout)
-        Dimension defaultSize = new Dimension(rightPanel.getPreferredSize().width, rightPanel.getPreferredSize().height);
-        controlButton.setPreferredSize(defaultSize);
-
         GridBagConstraints leftConstraints = new GridBagConstraints();
+
+        // Common settings
+        leftConstraints.insets = new Insets(5, 5, 5, 5); // Padding
+
+        // === Row 0: Big Button ===
+        JButton controlButton = new JButton("Start");
+        controlButton.setPreferredSize(new Dimension(200, 50));
+        controlButton.setFont(controlButton.getFont().deriveFont(Font.BOLD, 16f));
         leftConstraints.gridx = 0;
         leftConstraints.gridy = 0;
-        leftConstraints.anchor = GridBagConstraints.NORTH;
-        leftConstraints.fill = GridBagConstraints.NONE;
-        leftConstraints.weighty = 1;
-
+        leftConstraints.gridwidth = 2;
+        leftConstraints.fill = GridBagConstraints.HORIZONTAL;
         leftPanel.add(controlButton, leftConstraints);
+
+        // === Row 1: Label + ComboBox ===
+        leftConstraints.gridy = 1;
+        leftConstraints.gridwidth = 1;
+        leftConstraints.fill = GridBagConstraints.NONE;
+
+        JLabel comboLabel = new JBLabel("ThreadPool size:");
+        leftConstraints.gridx = 0;
+        leftConstraints.anchor = GridBagConstraints.EAST;
+        leftPanel.add(comboLabel, leftConstraints);
+
+        String[] options = Util.POOL_OPTIONS;
+        JComboBox<String> comboBox = new ComboBox<>(options);
+        comboBox.setSelectedIndex(Util.DEFAULT_POOL_OPTION);
+        leftConstraints.gridx = 1;
+        leftConstraints.anchor = GridBagConstraints.WEST;
+        leftPanel.add(comboBox, leftConstraints);
+
+        // === Row 2: Label + Spinner ===
+        leftConstraints.gridy = 2;
+
+        JLabel spinnerLabel = new JBLabel("Judge-LLM calls:");
+        leftConstraints.gridx = 0;
+        leftConstraints.anchor = GridBagConstraints.EAST;
+        leftPanel.add(spinnerLabel, leftConstraints);
+
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(Util.DEFAULT_N, 1, 20, 1);
+        JSpinner spinner = new JSpinner(spinnerModel);
+        JComponent editor = spinner.getEditor();
+        if (editor instanceof JSpinner.DefaultEditor) {
+            JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
+            textField.setEditable(false);         // Prevent typing
+            textField.setFocusable(false);        // Optional: remove focus highlight
+        }
+        leftConstraints.gridx = 1;
+        leftConstraints.anchor = GridBagConstraints.WEST;
+        leftPanel.add(spinner, leftConstraints);
+
         withButtons.add(leftPanel, BorderLayout.WEST);
 
         // Add the button to the top of the pluginPanel
         pluginPanel.add(withButtons, BorderLayout.NORTH);
 
         // Create the table using the data and column names
-        JTable table = new JTable(new DefaultTableModel(null, Util.columnNames));
+        JTable table = new JBTable(new DefaultTableModel(null, Util.columnNames));
         // Make separate cells selectable
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
@@ -98,16 +137,16 @@ public class LLMJudgeUICreator {
         // Add the scroll pane (with the table) to the center of the pluginPanel
         pluginPanel.add(scrollPane, BorderLayout.CENTER);
 
-        ViewModel vm = new ViewModel(
+        return new ViewModel(
                 pythonButton,
                 pythonLabel,
                 jsonButton,
                 jsonLabel,
                 modelLabel,
                 controlButton,
+                comboBox,
+                spinner,
                 table
         );
-
-        Model model = new Model(vm);
     }
 }

@@ -41,11 +41,11 @@ public final class ScorerUtil {
         if (matcher.find()) {
             score = Integer.parseInt(matcher.group(1));
         } else {
-            throw new ScoringException("Invalid response format");
+            throw new ScoringException("Invalid response format. [[score]] of integer type not found");
         }
 
         if (score < MIN_SCORE || score > MAX_SCORE) {
-            throw new ScoringException("Invalid score value");
+            throw new ScoringException("Invalid score value " + score);
         }
 
         return score;

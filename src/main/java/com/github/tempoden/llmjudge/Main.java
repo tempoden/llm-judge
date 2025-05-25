@@ -11,6 +11,8 @@ import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+// Run eval without GUI
+// Used before adding GUI
 public class Main {
     public static void main(String[] args) {
         ModelRunner runner = new PythonRunner(
@@ -47,7 +49,7 @@ public class Main {
             System.out.println("Score: " + score);
             return score;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
 
         cancel.cancel();

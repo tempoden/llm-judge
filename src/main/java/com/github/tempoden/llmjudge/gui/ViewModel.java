@@ -3,12 +3,14 @@ package com.github.tempoden.llmjudge.gui;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ViewModel {
@@ -21,7 +23,10 @@ public class ViewModel {
 
     private final JLabel modelPathLabel;
 
-    public final JButton controlButton;
+    private final JButton controlButton;
+
+    private final JComboBox<String> poolBox;
+    private final JSpinner nSpinner;
 
     private final JTable table;
 
@@ -31,6 +36,8 @@ public class ViewModel {
                      @NotNull JLabel jsonLabel,
                      @NotNull JLabel modelPathLabel,
                      @NotNull JButton controlButton,
+                     @NotNull JComboBox<String> poolBox,
+                     @NotNull JSpinner nSpinner,
                      @NotNull JTable table)  {
         this.pythonPathButton = pythonPathButton;
         this.pythonPathLabel = pythonPathLabel;
@@ -41,6 +48,10 @@ public class ViewModel {
         this.modelPathLabel = modelPathLabel;
 
         this.controlButton = controlButton;
+        this.controlButton.setEnabled(false);
+
+        this.poolBox = poolBox;
+        this.nSpinner = nSpinner;
 
         this.table = table;
     }
@@ -69,43 +80,56 @@ public class ViewModel {
         );
     }
 
-    public void enableStart(Runnable func) {
+    public void enableStart(@NotNull Runnable func) {
         ApplicationManager.getApplication().invokeLater(
-            () -> {
-                controlButton.setAction(
-                    new AbstractAction("Start") {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            // temporarily disable the button by unbinding action
-                            // until cancellation is initialized
-                            controlButton.setAction(null);
-                            func.run();
-                        }
+            () -> controlButton.setAction(
+                new AbstractAction("Start") {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // temporarily disable the button by unbinding action
+                        // until cancellation is initialized
+                        controlButton.setAction(null);
+                        func.run();
                     }
-                );
-            }
+                }
+            )
         );
     }
 
-    public void enableCancel(Runnable cancelFunc) {
+    public void enableCancel(@NotNull Runnable cancelFunc) {
         ApplicationManager.getApplication().invokeLater(
-            () -> {
-                controlButton.setAction(
-                    new AbstractAction("Cancel") {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            // temporarily disable the button by unbinding action
-                            // until cancellation is initialized
-                            controlButton.setAction(null);
-                            cancelFunc.run();
-                        }
+            () -> controlButton.setAction(
+                new AbstractAction("Cancel") {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // temporarily disable the button by unbinding action
+                        // until cancellation is initialized
+                        controlButton.setAction(null);
+                        cancelFunc.run();
+                        showCancelDialog();
                     }
-                );
-            }
+                }
+            )
         );
     }
 
-    public void choseJSON(Consumer<String> jsonPathHandler) {
+    public void setPoolSize(@NotNull Consumer<String> poolSizeHandler) {
+        ApplicationManager.getApplication().invokeLater(
+            () -> poolBox.addActionListener(
+                e -> poolSizeHandler.accept(Objects.requireNonNull(this.poolBox.getSelectedItem()).toString())
+            )
+        );
+    }
+
+    public void setJudgeReqCount(@NotNull Consumer<Integer> judgeReqCountHandler){
+        ApplicationManager.getApplication().invokeLater(
+            () -> nSpinner.getModel().addChangeListener(
+                e -> judgeReqCountHandler.accept(Integer.parseInt(nSpinner.getValue().toString()))
+            )
+        );
+    }
+
+    public void choseJSON(@NotNull Consumer<String> jsonPathHandler) {
         ApplicationManager.getApplication().invokeLater(
             () -> jsonButton.addActionListener(
                 e -> {
@@ -113,9 +137,8 @@ public class ViewModel {
 
                     // Found one issue which still maintains in the Community edition
                     // https://youtrack.jetbrains.com/issue/IDEA-347300/Selecting-a-file-in-the-file-chooser-leads-to-Slow-operations-are-prohibited-on-EDT-error
-                    FileChooser.chooseFile(descriptor, null, null, virtualFile -> {
-                        jsonPathHandler.accept(virtualFile.getCanonicalPath());
-                    });
+                    FileChooser.chooseFile(descriptor, null, null,
+                        virtualFile -> jsonPathHandler.accept(virtualFile.getCanonicalPath()));
                 }
             )
         );
@@ -133,15 +156,14 @@ public class ViewModel {
         return descriptor;
     }
 
-    public void chosePython(Consumer<String> pythonPathHandler) {
+    public void chosePython(@NotNull Consumer<String> pythonPathHandler) {
         ApplicationManager.getApplication().invokeLater(
             () -> pythonPathButton.addActionListener(
                 e -> {
                     FileChooserDescriptor descriptor = getPythonFileChooserDescriptor();
 
-                    FileChooser.chooseFile(descriptor, null, null, virtualFile -> {
-                        pythonPathHandler.accept(virtualFile.getCanonicalPath());
-                    });
+                    FileChooser.chooseFile(descriptor, null, null,
+                        virtualFile ->  pythonPathHandler.accept(virtualFile.getCanonicalPath()));
                 }
             )
         );
@@ -157,5 +179,68 @@ public class ViewModel {
         };
         descriptor.setTitle("Select a Python Interpreter to Use");
         return descriptor;
+    }
+
+    public void showFinishDialog() {
+        ApplicationManager.getApplication().invokeLater(
+            () -> Messages.showMessageDialog(
+                    "LLM-judge has successfully evaluated scores for the provided model",
+                    "Success",
+                    Messages.getInformationIcon()
+            ));
+    }
+
+    public void showCancelDialog() {
+        ApplicationManager.getApplication().invokeLater(
+            () -> Messages.showMessageDialog(
+                    "Model evaluation was cancelled",
+                    "Operation Cancelled",
+                    Messages.getInformationIcon()
+            ));
+    }
+
+    public void showErrorDialog(@NotNull String msg) {
+        ApplicationManager.getApplication().invokeLater(
+            () -> Messages.showMessageDialog(
+                    "LLM-judge was terminated with an error: " + msg,
+                    "Evaluation Error",
+                    Messages.getErrorIcon()
+            ));
+    }
+
+    public void disableUI() {
+        ApplicationManager.getApplication().invokeLater(
+            () -> {
+                this.pythonPathButton.setEnabled(false);
+                this.jsonButton.setEnabled(false);
+                this.controlButton.setEnabled(false);
+                this.nSpinner.setEnabled(false);
+                this.poolBox.setEnabled(false);
+        });
+    }
+
+    // Initially, I thought that I may wrap all this button enabling/disabling
+    // into an AutoClosable, and use it like a context manager. But in the end,
+    // decided that it may be an overcomplication, so I left these two parts
+    // as a separate methods.
+
+    public void disableSettings() {
+        ApplicationManager.getApplication().invokeLater(
+            () -> {
+                this.pythonPathButton.setEnabled(false);
+                this.jsonButton.setEnabled(false);
+                this.nSpinner.setEnabled(false);
+                this.poolBox.setEnabled(false);
+        });
+    }
+
+    public void enableSettings() {
+        ApplicationManager.getApplication().invokeLater(
+            () -> {
+                this.pythonPathButton.setEnabled(true);
+                this.jsonButton.setEnabled(true);
+                this.nSpinner.setEnabled(true);
+                this.poolBox.setEnabled(true);
+        });
     }
 }

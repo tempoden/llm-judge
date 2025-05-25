@@ -1,7 +1,7 @@
 package com.github.tempoden.llmjudge.backend.runner;
 
-import com.github.tempoden.llmjudge.backend.concurrency.CancellationToken;
-import com.github.tempoden.llmjudge.backend.concurrency.WaitUtil;
+import com.github.tempoden.llmjudge.backend.concurrency.*;
+
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.*;
@@ -20,7 +20,9 @@ public class PythonJBRunner implements ModelRunner {
     private final String modelPath;
     private final CancellationToken cancel;
 
-     public PythonJBRunner(String interpreterPath, String modelPath, CancellationToken cancel) {
+     public PythonJBRunner(@NotNull String interpreterPath,
+                           @NotNull String modelPath,
+                           @NotNull CancellationToken cancel) {
         this.interpreterPath = interpreterPath;
         this.modelPath = modelPath;
         this.cancel = cancel;
