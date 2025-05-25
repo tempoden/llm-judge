@@ -43,7 +43,7 @@ public class WorkerTest {
         when(scorer.scoreN(any(), eq(4), any())).thenReturn(42);
         when(token.isCancelled()).thenReturn(false);
 
-        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 4, token);
+        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 4, token, null);
         worker.run();
 
         verify(runnerStatus).accept("Evaluating...");
@@ -56,7 +56,7 @@ public class WorkerTest {
     public void testCancelledBeforeStart() {
         when(token.isCancelled()).thenReturn(true);
 
-        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token);
+        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token, null);
         worker.run();
 
         verifyNoInteractions(runnerStatus, scorerStatus, modelRunner, scorer);
@@ -67,7 +67,7 @@ public class WorkerTest {
         when(token.isCancelled()).thenReturn(false).thenReturn(true); // first false, then true
         when(modelRunner.queryModel("input")).thenReturn("response");
 
-        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token);
+        Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token, null);
         worker.run();
 
         verify(runnerStatus).accept("Evaluating...");
@@ -91,7 +91,7 @@ public class WorkerTest {
 
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
 
-            Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token);
+            Worker worker = new Worker(modelRunner, runnerStatus, scorer, scorerStatus, workload, 1, token, null);
             Future<?> future = executor.submit(worker);
 
             // Wait until modelRunner.queryModel has been entered
