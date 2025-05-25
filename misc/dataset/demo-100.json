@@ -1,0 +1,405 @@
+{
+    "model_path": "C:\\SHAD\\JB\\llm-judge\\misc\\model\\chatgpt.py",
+    "data": [
+        {
+            "input": "who won the oscar for best picture in 1976",
+            "reference_output": "Rocky"
+        },
+        {
+            "input": "where is the food stored in a yam plant",
+            "reference_output": "an edible tuber"
+        },
+        {
+            "input": "what year did the price is right first air",
+            "reference_output": "November 26, 1956"
+        },
+        {
+            "input": "what are the main functions of the stem",
+            "reference_output": "Production of new living tissue"
+        },
+        {
+            "input": "who sings gimme shelter with mick jagger",
+            "reference_output": "Merry Clayton"
+        },
+        {
+            "input": "when does the next warrior book come out",
+            "reference_output": "April 10, 2018"
+        },
+        {
+            "input": "who played cory's older brother on boy meets world",
+            "reference_output": "Will Friedle"
+        },
+        {
+            "input": "who played bubba in the heat of the night",
+            "reference_output": "Carlos Alan Autry Jr."
+        },
+        {
+            "input": "nodding your head no is an example of",
+            "reference_output": "a gesture"
+        },
+        {
+            "input": "who played mr. kincaid on the partridge family",
+            "reference_output": "David Joseph Madden"
+        },
+        {
+            "input": "where was the world chess tournament 2017 held",
+            "reference_output": "Tbilisi, Georgia"
+        },
+        {
+            "input": "when did the twenty one pilots hiatus start",
+            "reference_output": "November 2016"
+        },
+        {
+            "input": "who sang the song oh what a lonely boy",
+            "reference_output": "Andrew Gold"
+        },
+        {
+            "input": "who were the bands in pitch perfect 3",
+            "reference_output": "Evermoist"
+        },
+        {
+            "input": "tad the lost explorer and the secret of king midas english cast",
+            "reference_output": "Ariel Winter as Sara Lavrof"
+        },
+        {
+            "input": "what was the emperor name in star wars",
+            "reference_output": "Darth Sidious"
+        },
+        {
+            "input": "where did they film the game of thrones",
+            "reference_output": "Croatia"
+        },
+        {
+            "input": "who does the voice of the elephant in sing",
+            "reference_output": "Tori Kelly"
+        },
+        {
+            "input": "when do liam and annie get together season 3",
+            "reference_output": "Holiday Madness"
+        },
+        {
+            "input": "who was mr.owen in and then there were none",
+            "reference_output": "Justice Lawrence John Wargrave"
+        },
+        {
+            "input": "when was the internet introduced to the public",
+            "reference_output": "September 1993"
+        },
+        {
+            "input": "where does the last name waters come from",
+            "reference_output": "Wales and Yorkshire"
+        },
+        {
+            "input": "who do the characters represent in 8 mile",
+            "reference_output": "loosely on Eminem"
+        },
+        {
+            "input": "one piece episode 534 english dubbed release date",
+            "reference_output": "February 5, 2012"
+        },
+        {
+            "input": "north carolina delegate to the second continental congress",
+            "reference_output": "Timothy Bloodworth"
+        },
+        {
+            "input": "where does tropic of cancer pass in india",
+            "reference_output": "Chhattisgarh"
+        },
+        {
+            "input": "who played sarah hedley in when the boat comes in",
+            "reference_output": "Rosalind Bailey"
+        },
+        {
+            "input": "how many super bowl games has the patriots played in",
+            "reference_output": "10"
+        },
+        {
+            "input": "legends of tomorrow season 3 finale air date",
+            "reference_output": "April 9, 2018"
+        },
+        {
+            "input": "when does monday night raw come on hulu",
+            "reference_output": "the following day"
+        },
+        {
+            "input": "who owned the colts when they left baltimore",
+            "reference_output": "Robert Irsay"
+        },
+        {
+            "input": "last world series that didn't go 7 games",
+            "reference_output": "2015"
+        },
+        {
+            "input": "who was the leader of the zulu in south africa who led the fight against the british",
+            "reference_output": "Cetshwayo"
+        },
+        {
+            "input": "who did the original spirit in the sky",
+            "reference_output": "Norman Greenbaum"
+        },
+        {
+            "input": "what is the name of the hyena in lion king",
+            "reference_output": "Banzai"
+        },
+        {
+            "input": "who played adaline in the age of adaline",
+            "reference_output": "Adaline Bowman"
+        },
+        {
+            "input": "when does the heart develop and begin pumping blood",
+            "reference_output": "by week 4 of development"
+        },
+        {
+            "input": "where is the hotel used in the movie the shining",
+            "reference_output": "The Stanley Hotel"
+        },
+        {
+            "input": "where is the left anterior descending artery located",
+            "reference_output": "the left coronary artery"
+        },
+        {
+            "input": "which episode does gideon die in criminal minds",
+            "reference_output": "\"Nelson's Sparrow\""
+        },
+        {
+            "input": "when were the words under god added to the pledge",
+            "reference_output": "on Flag Day in 1954"
+        },
+        {
+            "input": "where does the term pop music come from",
+            "reference_output": "Britain"
+        },
+        {
+            "input": "who sang what are we doing in love",
+            "reference_output": "Dottie West"
+        },
+        {
+            "input": "what is the name of the first earthquake early warning system",
+            "reference_output": "1991"
+        },
+        {
+            "input": "what does zonia receive from reuben in the play",
+            "reference_output": "kiss"
+        },
+        {
+            "input": "which organelle is the site of atp production and storage",
+            "reference_output": "mitochondrion"
+        },
+        {
+            "input": "who stole the mona lisa from the louvre in 1911",
+            "reference_output": "Vincenzo Peruggia"
+        },
+        {
+            "input": "what is the population of keystone heights florida",
+            "reference_output": "1,350"
+        },
+        {
+            "input": "different ways to say bless you in french",
+            "reference_output": "\u00e0 tes / vos souhaits"
+        },
+        {
+            "input": "who is the song diamonds and rust about",
+            "reference_output": "Bob Dylan"
+        },
+        {
+            "input": "who played the dad in a christmas story",
+            "reference_output": "Darren McGavin"
+        },
+        {
+            "input": "who won the king of dance season 2",
+            "reference_output": "LAAB Crew From Team Sherif"
+        },
+        {
+            "input": "which philosopher advocated the idea of return to nature",
+            "reference_output": "Bacon"
+        },
+        {
+            "input": "when did teenage mutant ninja turtles come out",
+            "reference_output": "1984"
+        },
+        {
+            "input": "who has climbed mount everest the number of times",
+            "reference_output": "Phurba Tashi Sherpa"
+        },
+        {
+            "input": "who became a leader of the indian national congress",
+            "reference_output": "Mahatma Gandhi"
+        },
+        {
+            "input": "who is the owner of the crowne plaza",
+            "reference_output": "InterContinental Hotels Group"
+        },
+        {
+            "input": "how long has tom brady been playing professional football",
+            "reference_output": "18-season career"
+        },
+        {
+            "input": "the most common form of megalithic architecture in europe is",
+            "reference_output": "the portal tomb"
+        },
+        {
+            "input": "who won the academy award for the deer hunter",
+            "reference_output": "John Peverall"
+        },
+        {
+            "input": "when did the nest 3rd generation come out",
+            "reference_output": "September 1, 2015"
+        },
+        {
+            "input": "who was selected for the 2018 football hall of fame",
+            "reference_output": "Ray Lewis"
+        },
+        {
+            "input": "who played the virgin in conan the destroyer",
+            "reference_output": "Olivia d'Abo"
+        },
+        {
+            "input": "what is the highest scoring letter in scrabble",
+            "reference_output": "Q"
+        },
+        {
+            "input": "who played mary in christmas with the kranks",
+            "reference_output": "Felicity Huffman"
+        },
+        {
+            "input": "who sings don't take your guns to town",
+            "reference_output": "U2"
+        },
+        {
+            "input": "who won the 2017 ncaa mens basketball tournament",
+            "reference_output": "North Carolina"
+        },
+        {
+            "input": "who said that religion is the opiate of the masses",
+            "reference_output": "Karl Marx."
+        },
+        {
+            "input": "when did marathon change its name to snickers",
+            "reference_output": "19 July 1990"
+        },
+        {
+            "input": "where does the band imagine dragons come from",
+            "reference_output": "Las Vegas, Nevada"
+        },
+        {
+            "input": "where is the slide placed on the microscope",
+            "reference_output": "stage"
+        },
+        {
+            "input": "what is don quixote's horse's name",
+            "reference_output": "Rocinante"
+        },
+        {
+            "input": "the witch and the hundred knight 2 us release",
+            "reference_output": "March 27, 2018"
+        },
+        {
+            "input": "consist of the sum of the fixed and variable costs for any given level of production",
+            "reference_output": "total cost (TC)"
+        },
+        {
+            "input": "most home runs by 2 teammates in a season",
+            "reference_output": "115"
+        },
+        {
+            "input": "where does blonde hair green eyes come from",
+            "reference_output": "a low concentration in pigmentation"
+        },
+        {
+            "input": "who is considered the father of modern behaviorism",
+            "reference_output": "John B. Watson"
+        },
+        {
+            "input": "what is the share of agriculture in indian economy",
+            "reference_output": "17.32%"
+        },
+        {
+            "input": "when did the astros change from the national league to the american league",
+            "reference_output": "2013"
+        },
+        {
+            "input": "who sang it must have been love but its over now",
+            "reference_output": "Roxette"
+        },
+        {
+            "input": "who played anna in once upon a time",
+            "reference_output": "Elizabeth Dean Lail"
+        },
+        {
+            "input": "what is bermuda competing in the winter olympics",
+            "reference_output": "Cross-country skiing"
+        },
+        {
+            "input": "who may be affected by monetary penalties imposed by the irs",
+            "reference_output": "Taxpayers in the United States"
+        },
+        {
+            "input": "who plays brad pitt's daughter in moneyball",
+            "reference_output": "Kerris Lilla Dorsey"
+        },
+        {
+            "input": "who played the king in the ten commandments",
+            "reference_output": "Yul Brynner"
+        },
+        {
+            "input": "what channel is big 10 network on fios",
+            "reference_output": "585 (HD)"
+        },
+        {
+            "input": "who owns the delano hotel in las vegas",
+            "reference_output": "MGM Resorts International"
+        },
+        {
+            "input": "who does stefan marry in the vampire diaries",
+            "reference_output": "Caroline Forbes"
+        },
+        {
+            "input": "who wrote when a man loves a woman",
+            "reference_output": "Calvin Lewis and Andrew Wright"
+        },
+        {
+            "input": "when was the movie cool hand luke made",
+            "reference_output": "1967"
+        },
+        {
+            "input": "who said i will not go quietly into the night",
+            "reference_output": "Welsh poet Dylan Thomas"
+        },
+        {
+            "input": "who was the spanish civil war fought between",
+            "reference_output": "Nationalists"
+        },
+        {
+            "input": "who played bat masterson in the tv series",
+            "reference_output": "Gene Barry"
+        },
+        {
+            "input": "what is the meaning of the harp in ireland",
+            "reference_output": "the arms of Ireland"
+        },
+        {
+            "input": "who came up with the term baby boomer",
+            "reference_output": "The Washington Post"
+        },
+        {
+            "input": "who sings the rap in baby by justin bieber",
+            "reference_output": "Ludacris"
+        },
+        {
+            "input": "the king of kalinga in the mauryan period was",
+            "reference_output": "Ashoka"
+        },
+        {
+            "input": "when did hollywood video go out of business",
+            "reference_output": "2005."
+        },
+        {
+            "input": "who proposed that electrons behave like waves and particles",
+            "reference_output": "Einstein"
+        },
+        {
+            "input": "when was last time bayern munich won champions league",
+            "reference_output": "2012\u201313"
+        }
+    ]
+}
