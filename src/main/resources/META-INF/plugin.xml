@@ -7,6 +7,9 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.tempoden.llmjudge.toolWindow.MyToolWindowFactory" id="LLM-Judge"/>
+        <toolWindow factoryClass="com.github.tempoden.llmjudge.toolWindow.MyToolWindowFactory"
+                    id="LLM-Judge"
+                    anchor="bottom"
+        />
     </extensions>
 </idea-plugin>
