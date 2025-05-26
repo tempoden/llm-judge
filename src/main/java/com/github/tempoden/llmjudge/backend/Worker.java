@@ -55,28 +55,17 @@ public class Worker implements Runnable {
             return;
         }
 
-        String response;
-
         try {
+            String response;
+
             runnerStatus.accept(STARTED);
             response = runner.queryModel(workload.input());
             runnerStatus.accept(response);
-        } catch (RunCancelledException ignored) {
-            runnerStatus.accept(CANCELED);
-            return;
-        } catch (RunModelException e) {
-            runnerStatus.accept(ERROR);
-            if (errorHandler != null) {
-                errorHandler.accept(e);
+
+            if (cancellationToken != null && cancellationToken.isCancelled()) {
+                return;
             }
-            throw e;
-        }
 
-        if (cancellationToken != null && cancellationToken.isCancelled()) {
-            return;
-        }
-
-        try {
             scorerStatus.accept(STARTED);
             int score = scorer.scoreN(
                     new ScoringItem(
@@ -87,8 +76,17 @@ public class Worker implements Runnable {
                     ScoreCombiners::votingCombine
             );
             scorerStatus.accept(Integer.toString(score));
+
+        } catch (RunCancelledException ignored) {
+            runnerStatus.accept(CANCELED);
         } catch (ScoringCancelledException ignored) {
             scorerStatus.accept(CANCELED);
+        } catch (RunModelException e) {
+            runnerStatus.accept(ERROR);
+            if (errorHandler != null) {
+                errorHandler.accept(e);
+            }
+            throw e;
         } catch (ScoringException e) {
             scorerStatus.accept(ERROR);
             if (errorHandler != null) {

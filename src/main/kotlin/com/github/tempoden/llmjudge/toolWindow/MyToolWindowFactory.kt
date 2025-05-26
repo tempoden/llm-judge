@@ -23,8 +23,8 @@ class MyToolWindowFactory : ToolWindowFactory {
         private lateinit var model: Model
 
         fun getContent() = JBPanel<JBPanel<*>>().apply {
-            val vm = LLMJudgeUICreator.createContent(this)
-            model = Model(vm)
+            val controller = LLMJudgeUICreator.createContent(this)
+            model = Model(controller)
         }
     }
 }

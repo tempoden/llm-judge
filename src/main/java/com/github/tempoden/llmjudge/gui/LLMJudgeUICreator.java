@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class LLMJudgeUICreator {
-    public static ViewModel createContent(JPanel pluginPanel) {
+    public static Controller createContent(JPanel pluginPanel) {
         pluginPanel.setLayout(new BorderLayout());
 
         JPanel withButtons = new JPanel();
@@ -137,7 +137,7 @@ public class LLMJudgeUICreator {
         // Add the scroll pane (with the table) to the center of the pluginPanel
         pluginPanel.add(scrollPane, BorderLayout.CENTER);
 
-        return new ViewModel(
+        return new Controller(
                 pythonButton,
                 pythonLabel,
                 jsonButton,

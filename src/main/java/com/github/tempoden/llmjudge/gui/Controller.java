@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ViewModel {
+public class Controller {
 
     private final JButton pythonPathButton;
     private final JLabel pythonPathLabel;
@@ -30,15 +30,15 @@ public class ViewModel {
 
     private final JTable table;
 
-    public ViewModel(@NotNull JButton pythonPathButton,
-                     @NotNull JLabel pythonPathLabel,
-                     @NotNull JButton jsonButton,
-                     @NotNull JLabel jsonLabel,
-                     @NotNull JLabel modelPathLabel,
-                     @NotNull JButton controlButton,
-                     @NotNull JComboBox<String> poolBox,
-                     @NotNull JSpinner nSpinner,
-                     @NotNull JTable table)  {
+    public Controller(@NotNull JButton pythonPathButton,
+                      @NotNull JLabel pythonPathLabel,
+                      @NotNull JButton jsonButton,
+                      @NotNull JLabel jsonLabel,
+                      @NotNull JLabel modelPathLabel,
+                      @NotNull JButton controlButton,
+                      @NotNull JComboBox<String> poolBox,
+                      @NotNull JSpinner nSpinner,
+                      @NotNull JTable table)  {
         this.pythonPathButton = pythonPathButton;
         this.pythonPathLabel = pythonPathLabel;
 

@@ -9,7 +9,7 @@ public final class ScorerUtil {
         to the user question displayed below. Your evaluation should consider factors such as the helpfulness,
         relevance, accuracy, depth, creativity, and level of detail of the response. Begin your evaluation
         by providing a short explanation. Be as objective as possible. After providing your explanation,
-        you must rate the response on a scale of 1 to 10 by strictly following this format: [[rating]],
+        you must rate the response on a scale of 0 to 10 by strictly following this format: [[rating]],
         for example:
         
         Rating: [[5]]

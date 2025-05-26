@@ -3,7 +3,6 @@ package com.github.tempoden.llmjudge.backend.scoring;
 import com.github.tempoden.llmjudge.backend.concurrency.CancellationToken;
 import com.github.tempoden.llmjudge.backend.concurrency.WaitUtil;
 
-import com.github.tempoden.llmjudge.backend.runner.PythonJBRunner;
 import com.intellij.openapi.diagnostic.Logger;
 import com.openai.client.OpenAIClientAsync;
 import com.openai.models.ChatModel;

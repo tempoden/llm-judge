@@ -25,7 +25,7 @@ public class Model {
 
     private static final Logger LOG = Logger.getInstance(Model.class);
 
-    private final ViewModel vm;
+    private final Controller vm;
     private final DataParser parser = new JSONParser();
 
     private static OpenAIClientAsync client;
@@ -56,19 +56,19 @@ public class Model {
     private PoolSize poolSize = PoolSize.EIGHT;
     private int judgeReqCount = 3;
 
-    public Model (@NotNull ViewModel vm) {
-        this.vm = vm;
+    public Model (@NotNull Controller controller) {
+        this.vm = controller;
 
-        vm.setPythonPath("default `python` executable from $PATH will be used");
-        vm.setJsonPath("");
-        vm.choseJSON(this::setModelFile);
-        vm.chosePython(this::setPython);
-        vm.setPoolSize(this::setPoolSize);
-        vm.setJudgeReqCount(this::setJudgeReqCount);
+        controller.setPythonPath("default `python` executable from $PATH will be used");
+        controller.setJsonPath("");
+        controller.choseJSON(this::setModelFile);
+        controller.chosePython(this::setPython);
+        controller.setPoolSize(this::setPoolSize);
+        controller.setJudgeReqCount(this::setJudgeReqCount);
 
         if (client == null) {
-            vm.disableUI();
-            vm.showErrorDialog("Failed to initialize OpenAI client from env. Please set OPENAI_API_KEY before starting plugin.");
+            controller.disableUI();
+            controller.showErrorDialog("Failed to initialize OpenAI client from env. Please set OPENAI_API_KEY before starting plugin.");
         }
     }
 
@@ -139,11 +139,11 @@ public class Model {
                     List<CompletableFuture<Void>> subtasks = new ArrayList<>(data.size());
                     for (int i = 0; i < data.size(); i++) {
                         CompletableFuture<Void> subtask = CompletableFuture.runAsync(
-                                createSubtaskContent(
-                                        runner, scorer, errorHandler,
-                                        data.get(i), judgeReqCount,
-                                        token, tm, i),
-                                exec
+                            createSubtaskContent(
+                                runner, scorer, errorHandler,
+                                data.get(i), judgeReqCount,
+                                token, tm, i),
+                            exec
                         );
                         subtasks.add(subtask);
                     }
