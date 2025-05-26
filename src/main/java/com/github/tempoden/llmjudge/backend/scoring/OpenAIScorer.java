@@ -8,6 +8,7 @@ import com.openai.client.OpenAIClientAsync;
 import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
 import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseError;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -73,6 +74,12 @@ public class OpenAIScorer implements Scorer {
     }
 
     private int parseScore(Response response) {
+        response.error().ifPresent(
+            (ResponseError err) -> {
+                throw new ScoringException("Response error: " + err.message());
+            }
+        );
+
         if (response.output().size() != 1) {
             throw new ScoringException("Unexpected response size");
         }
