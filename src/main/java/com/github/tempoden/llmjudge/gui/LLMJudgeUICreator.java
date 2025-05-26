@@ -1,5 +1,6 @@
 package com.github.tempoden.llmjudge.gui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.table.JBTable;
@@ -74,9 +75,7 @@ public class LLMJudgeUICreator {
         leftConstraints.insets = new Insets(5, 5, 5, 5); // Padding
 
         // === Row 0: Big Button ===
-        JButton controlButton = new JButton("Start");
-        controlButton.setPreferredSize(new Dimension(200, 50));
-        controlButton.setFont(controlButton.getFont().deriveFont(Font.BOLD, 16f));
+        JButton controlButton = new JButton("Run", AllIcons.Actions.Execute);
         leftConstraints.gridx = 0;
         leftConstraints.gridy = 0;
         leftConstraints.gridwidth = 2;

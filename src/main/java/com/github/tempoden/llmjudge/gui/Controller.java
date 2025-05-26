@@ -1,5 +1,6 @@
 package com.github.tempoden.llmjudge.gui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -82,34 +83,40 @@ public class Controller {
 
     public void enableStart(@NotNull Runnable func) {
         ApplicationManager.getApplication().invokeLater(
-            () -> controlButton.setAction(
-                new AbstractAction("Start") {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // temporarily disable the button by unbinding action
-                        // until cancellation is initialized
-                        controlButton.setAction(null);
-                        func.run();
-                    }
-                }
-            )
+            () -> {
+                controlButton.setAction(
+                        new AbstractAction("Run") {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                // temporarily disable the button by unbinding action
+                                // until cancellation is initialized
+                                controlButton.setAction(null);
+                                func.run();
+                            }
+                        }
+                );
+                controlButton.setIcon(AllIcons.Actions.Execute);
+            }
         );
     }
 
     public void enableCancel(@NotNull Runnable cancelFunc) {
         ApplicationManager.getApplication().invokeLater(
-            () -> controlButton.setAction(
-                new AbstractAction("Cancel") {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // temporarily disable the button by unbinding action
-                        // until cancellation is initialized
-                        controlButton.setAction(null);
-                        cancelFunc.run();
-                        showCancelDialog();
-                    }
-                }
-            )
+            () -> {
+                controlButton.setAction(
+                        new AbstractAction("Stop") {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                // temporarily disable the button by unbinding action
+                                // until cancellation is initialized
+                                controlButton.setAction(null);
+                                cancelFunc.run();
+                                showCancelDialog();
+                            }
+                        }
+                );
+                controlButton.setIcon(AllIcons.Actions.Suspend);
+            }
         );
     }
 
