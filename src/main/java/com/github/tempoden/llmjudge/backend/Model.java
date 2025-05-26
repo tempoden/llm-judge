@@ -52,7 +52,7 @@ public class Model {
     private static final int SCORE_COL = 3;
 
     private Content jsonData;
-    private String pythonPath = "C:\\Users\\tempo\\anaconda3\\python.exe";
+    private String pythonPath = "python";
     private PoolSize poolSize = PoolSize.EIGHT;
     private int judgeReqCount = 3;
 
