@@ -1,5 +1,10 @@
 # llm-judge
 
+![Build](/misc/icons/iconDark_100.png)
+![Build](/misc/icons/iconLight_100.png)
+
+---
+
 ![Build](https://github.com/tempoden/llm-judge/workflows/Build/badge.svg)
 
 ## Description
