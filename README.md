@@ -1,23 +1,14 @@
 # llm-judge
 
 ![Build](https://github.com/tempoden/llm-judge/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
+## Description
 
 <!-- Plugin description -->
 This plugin allows you to run evaluation of your models with a LLM-judge right from your IDE!
+
+This plugin expects that you have access to the [api.openai.com](http://api.openai.com) and 
+you API key is set to the `OPENAI_API_KEY` environment variable.
 
 To use it, you should provide a data file with the following JSON format:
 
@@ -39,29 +30,32 @@ To use it, you should provide a data file with the following JSON format:
 
 The `model.py` will be run using the chosen Python interpreter (by default, it will be the `python` executable from your `$PATH` environmental variable).
 
+It is expected that the model receives input via argv and prints output to stdout.
+The easiest way to do it is to use `" ".join(sys.argv[1:])` as the model input.
+Also, you should remember about encoding, and it is good to set it to UTF-8
+in your python script using `sys.stdout.reconfigure(encoding='utf-8')`.
+
 <!-- Plugin description end -->
+
+## Example models and data
+
+The example datasets could be found in [misc/dataset](misc/dataset).
+They are based on google's [natural-questions dataset](https://github.com/google-research-datasets/natural-questions/blob/master/nq_open/NQ-open.dev.jsonl).
+
+The example local models could be found in [misc/model](misc/model).
 
 ## Installation
 
-- Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "llm-judge"</kbd> >
-  <kbd>Install</kbd>
-  
-- Using JetBrains Marketplace:
+Currently, the plugin is available only for the manual installation:
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
-
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-- Manually:
-
-  Download the [latest release](https://github.com/tempoden/llm-judge/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+Download the [latest release](https://github.com/tempoden/llm-judge/releases/latest) and install it manually using
+<kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 
 ---
+Author: Denis Parfenov
+tempoden@yandex.ru / tempodennsk@gmail.com
+
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
